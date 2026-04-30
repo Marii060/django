@@ -1,0 +1,49 @@
+{% extends 'tareas/base.html' %}
+
+{% block title %}Lista de Tareas{% endblock %}
+
+{% block content %}
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1>Mis Tareas</h1>
+        <a href="{% url 'crear_tarea' %}" class="btn btn-success">
+            <i class="bi bi-plus-lg"></i> Nueva Tarea
+        </a>
+    </div>
+
+    {% if tareas %}
+        <div class="row">
+            {% for tarea in tareas %}
+                <div class="col-md-6 col-lg-4 mb-4">
+                    <div class="card h-100 {% if tarea.completada %}border-success{% else %}border-warning{% endif %}">
+                        <div class="card-body">
+                            <h5 class="card-title">{{ tarea.titulo }}</h5>
+                            <p class="card-text text-muted">
+                                {{ tarea.descripcion|truncatewords:20|default:"Sin descripción" }}
+                            </p>
+                            <p class="card-text">
+                                <small class="text-muted">
+                                    Creada: {{ tarea.fecha_creacion|date:"d/m/Y H:i" }}
+                                </small>
+                            </p>
+                            <span class="badge {% if tarea.completada %}bg-success{% else %}bg-warning text-dark{% endif %}">
+                                {% if tarea.completada %}Completada{% else %}Pendiente{% endif %}
+                            </span>
+                        </div>
+                        <div class="card-footer bg-transparent">
+                            <a href="{% url 'detalle_tarea' tarea.pk %}" class="btn btn-sm btn-info">Ver</a>
+                            <a href="{% url 'editar_tarea' tarea.pk %}" class="btn btn-sm btn-primary">Editar</a>
+                            <a href="{% url 'eliminar_tarea' tarea.pk %}" class="btn btn-sm btn-danger">Eliminar</a>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    {% else %}
+        <div class="alert alert-info text-center">
+            <h4 class="alert-heading">No hay tareas</h4>
+            <p>Aún no has creado ninguna tarea. ¡Empieza creando una nueva!</p>
+            <a href="{% url 'crear_tarea' %}" class="btn btn-primary">Crear primera tarea</a>
+        </div>
+    {% endif %}
+{% endblock %}
+
